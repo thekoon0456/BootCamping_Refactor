@@ -7,21 +7,13 @@
 
 - 나만 보기 아까운 내 캠핑 인증샷, 다른 캠퍼들에게 공유해 보는 건 어떠세요? <br>
 - 다른 캠퍼들이 공유한 멋진 사진을 통해 인기 있는 캠핑장 정보도 알아보고, 나만의 캠핑 기록도 남길 수 있는 부트캠핑!
-
 <br>
 
-## 🔗앱 스토어 다운로드 링크
-👉🏻[앱 스토어에서 부트캠프 확인하기](https://apps.apple.com/kr/app/%EB%B6%80%ED%8A%B8%EC%BA%A0%ED%95%91/id1672213235)
-<br>
-<br>
-
-## 📱구동 화면
-|<img src="https://user-images.githubusercontent.com/114223237/222381783-de2153bc-5b53-49b7-af76-5c2af1d321b0.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222381623-6ee28409-21ee-4427-9c60-e1ce0e7f68dc.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222385759-ef3a9738-31e6-4f6c-8f2c-c1cd86fe218c.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222385743-e6acddcf-0ae0-4a09-a5dc-2658766bfd6c.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222382137-6c9223de-2505-4486-a209-dfa6217d2fe6.gif"></img>
-|:-:|:-:|:-:|:-:|:-:|
-|`온보딩뷰`|`로그인 및 회원가입`|`다크모드`|`인기 캠핑 포토카드`|`실시간 캠핑 피드`|
-|<img src="https://user-images.githubusercontent.com/114223237/222382016-757b9274-8556-4f96-88ca-d797fe76bfed.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222381916-de59591f-1f5e-4666-b5cd-2736d8c945f5.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383116-b7fb7fdc-cf86-438e-8119-03da92cea9e8.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383091-b3863957-1ddf-4579-8306-fd403ab82fb5.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383712-cf3d4f1a-5247-4d35-b4d3-6cd8e343ed19.gif"></img>|
-|`캠핑장 검색`|`캠핑장 정보`|`내 캠핑일기`|`캠핑일기 작성`|`마이페이지`|
-<br>
+## 🔗 Links
+### [📱 AppStore](https://apps.apple.com/kr/app/부트캠핑/id1672213235)
+### [💻 GitHub](https://github.com/thekoon0456/BootCamping_Refactor)
+### [📺 Youtube](https://www.youtube.com/watch?v=OoabE3G7iJQ)
+### [👨‍💻 Blog](https://thekoon0456.tistory.com/search/부트캠핑?page=2)
 <br>
 
 ## 🧑🏻‍💻핵심 키워드
@@ -37,7 +29,6 @@
 ![Combine](https://img.shields.io/badge/Combine-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
 ![Lottie](https://img.shields.io/badge/Lottie-007ACC?style=for-the-badge&logo=Lottie&logoColor=white)
 <br>
-<br>
 
 ## 📌주요 기능
 - 포토카드 뷰: 유저의 반응(좋아요, 댓글)이 좋은 사진을 포토카드화하여 다른 유저들의 클릭(?)을 유도<br>
@@ -47,6 +38,27 @@
 - 캠핑일기 작성: 사진 추가 기능, 공개/비공개 설정 기능 <br>
 - 마이 페이지: 내 캠핑 일정 등록 기능, 관심있는 캠핑장과 캠핑일기 북마크 및 관리<br>
 <br>
+
+## 📱구동 화면
+|<img src="https://user-images.githubusercontent.com/114223237/222381783-de2153bc-5b53-49b7-af76-5c2af1d321b0.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222381623-6ee28409-21ee-4427-9c60-e1ce0e7f68dc.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222385759-ef3a9738-31e6-4f6c-8f2c-c1cd86fe218c.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222385743-e6acddcf-0ae0-4a09-a5dc-2658766bfd6c.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222382137-6c9223de-2505-4486-a209-dfa6217d2fe6.gif"></img>
+|:-:|:-:|:-:|:-:|:-:|
+|`온보딩뷰`|`로그인 및 회원가입`|`다크모드`|`인기 캠핑 포토카드`|`실시간 캠핑 피드`|
+|<img src="https://user-images.githubusercontent.com/114223237/222382016-757b9274-8556-4f96-88ca-d797fe76bfed.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222381916-de59591f-1f5e-4666-b5cd-2736d8c945f5.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383116-b7fb7fdc-cf86-438e-8119-03da92cea9e8.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383091-b3863957-1ddf-4579-8306-fd403ab82fb5.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383712-cf3d4f1a-5247-4d35-b4d3-6cd8e343ed19.gif"></img>|
+|`캠핑장 검색`|`캠핑장 정보`|`내 캠핑일기`|`캠핑일기 작성`|`마이페이지`|
+<br>
+
+## ✅ 담당 트러블 슈팅
+### 제목
+<div markdown="1">
+        
+```
+내용
+```
+
+```swift
+
+```
+</div>
 <br>
 
 ## 개발 환경
@@ -62,7 +74,6 @@
 - `Github`를 통한 프로젝트 이슈 관리 <br>
 - `DISCORD`를 활용하여 라이브 페어 프로그래밍 및 실시간 커뮤니케이션 <br>
 <br>
-<br>
 
 ## 코드 컨벤션
 ```
@@ -74,7 +85,6 @@
 - [Refactor] : 코드 리펙토링 
 - [Chore] : 빌드 업무 수정, 패키지 매니저 수정 
 ```
-<br>
 <br>
 
 ## 팀원 소개
