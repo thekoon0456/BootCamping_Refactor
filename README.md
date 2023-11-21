@@ -1,4 +1,4 @@
-## 🏕️부트캠핑은?
+# 🏕️부트캠핑
 `캠핑 사진과 캠핑장 정보 공유를 통해 더 나은 캠핑 문화를 만들어나가는, 캠퍼들을 위한 커뮤니티 앱 입니다.` <br>
 
 > 뷰 좋고 시설 좋은 캠핑장 가고 싶은데 어디가 좋은지 잘 모르겠어! <br>
@@ -18,15 +18,14 @@
 
 ## 🧑🏻‍💻핵심 키워드
 ![iOS](https://img.shields.io/badge/iOS-000000?style=for-the-badge&logo=ios&logoColor=white)
-![Swift](https://img.shields.io/badge/SwiftUI-0052CC?style=for-the-badge&logo=swift&logoColor=white)
+![SwiftUI](https://img.shields.io/badge/SwiftUI-0052CC?style=for-the-badge&logo=swift&logoColor=white)
 ![Swift](https://img.shields.io/badge/swift-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
+![Combine](https://img.shields.io/badge/Combine-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
 ![Xcode](https://img.shields.io/badge/Xcode-007ACC?style=for-the-badge&logo=Xcode&logoColor=white)
 
 ![Firebase](https://img.shields.io/badge/Firebase-039BE5?style=for-the-badge&logo=Firebase&logoColor=white)
 ![Google](https://img.shields.io/badge/google-4285F4?style=for-the-badge&logo=google&logoColor=white)
 ![KakaoTalk](https://img.shields.io/badge/kakaotalk-ffcd00.svg?style=for-the-badge&logo=kakaotalk&logoColor=000000)
-
-![Combine](https://img.shields.io/badge/Combine-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
 ![Lottie](https://img.shields.io/badge/Lottie-007ACC?style=for-the-badge&logo=Lottie&logoColor=white)
 <br>
 <br>
@@ -94,7 +93,6 @@
 |:-:|:-:|:-:|:-:|:-:|:-:|
 |<img src="https://avatars.githubusercontent.com/u/106993057?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/104570633?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/65296382?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/107797217?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/114223237?v=4" width=100>|<img src="https://avatars.githubusercontent.com/u/114223423?v=4" width=100>|
 |[@thekoon0456](https://github.com/thekoon0456)|[@SeongMin0106](https://github.com/SeongMin0106)|[@erun94510](https://github.com/erun94510)|[@mxnkng](https://github.com/mxnkng)|[@Primrose1101](https://github.com/Primrose1101)|[@chasomin](https://github.com/chasomin)|
-<br>
 <br>
 
 ## 라이센스
