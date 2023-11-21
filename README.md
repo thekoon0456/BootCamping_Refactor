@@ -55,10 +55,71 @@
 |`캠핑장 검색`|`캠핑장 정보`|`내 캠핑일기`|`캠핑일기 작성`|`마이페이지`|
 <br>
 
-## ✅ 담당 트러블 슈팅
-### 앱 사진 로딩시 애니메이션 스켈레톤 뷰 구현
+## ✅ 담당 기능 구현 트러블 슈팅
+### 사용자가 사용하는 흐름에 따라 자연스럽게 시점 이동이 되지 않는 문제
 <div markdown="1">
-        
+```
+ScrollViewReader를 활용해서 각 상황에 맞는 화면이 자동으로 스크롤되도록 구현했습니다.
+Cell에서 댓글 작성 버튼을 눌렀을때 바로 댓글 작성을 할 수 있도록 키보드가 올라온 채로 세부 화면으로 이동,
+댓글 작성 창을 누르면 댓글 화면으로 이동,
+댓글 작성 완료 버튼을 누르면 화면 가장 아래로 이동하도록 구현했습니다.
+```
+
+```swift
+ScrollViewReader { proxy in
+    VStack {
+        ScrollView(showsIndicators: false) {
+            LazyVStack(alignment: .leading) {
+                diaryUserProfile.id(topID)
+                    
+                Group {
+                    diaryDetailTitle
+                    diaryDetailContent
+                    
+                    if !campingSpotStore.campingSpotList.isEmpty {
+                        diaryCampingLink
+                    }
+                    //좋아요, 댓글, 타임스탬프
+                    diaryDetailInfo
+                    
+                    Divider()
+                    
+                //댓글
+                ForEach(commentStore.commentList) { comment in
+                        DiaryCommentCellView(commentStore: commentStore,
+                                            scrollViewHelper: scrollViewHelper,
+                                            item2: item,
+                                            item: comment)
+                    }
+                }
+                .padding(.horizontal, UIScreen.screenWidth * 0.03)
+                
+                //댓글 작성시 뷰 가장 아래로 이동
+                EmptyView()
+                    .frame(height: 0.1)
+                    .id(bottomID)
+                Spacer()
+            }
+            .task {
+                //이전화면에서 댓글버튼 눌렀다면 바로 키보드 나오도록
+                if diaryStore.isCommentButtonClicked {
+                    self.inputFocused = true
+                    proxy.scrollTo(commentButtonID, anchor: .top)
+                    diaryStore.isCommentButtonClicked = false
+                } else {
+                withAnimation {
+                    proxy.scrollTo(topID)
+                }
+            }
+        }
+    }
+}
+```
+</div>
+<br>
+
+### 네트워크 사정이 좋지 않은 상황에서 이미지 로딩 문제
+<div markdown="1">
 ```
 이미지 로딩시 회색 화면을 스켈레톤 뷰로 구현었습니다.
 통신환경이 좋은 곳에서는 로딩에 문제가 없지만 해외같이 통신환경이 좋지 않은 곳에서는 화면이 멈춘 것 같은 문제가 있어서
