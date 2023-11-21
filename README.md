@@ -21,7 +21,6 @@
 |`온보딩뷰`|`로그인 및 회원가입`|`다크모드`|`인기 캠핑 포토카드`|`실시간 캠핑 피드`|
 |<img src="https://user-images.githubusercontent.com/114223237/222382137-6c9223de-2505-4486-a209-dfa6217d2fe6.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222382016-757b9274-8556-4f96-88ca-d797fe76bfed.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222381916-de59591f-1f5e-4666-b5cd-2736d8c945f5.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383116-b7fb7fdc-cf86-438e-8119-03da92cea9e8.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383091-b3863957-1ddf-4579-8306-fd403ab82fb5.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222383712-cf3d4f1a-5247-4d35-b4d3-6cd8e343ed19.gif"></img>|
 |`캠핑장 검색`|`캠핑장 정보`|`내 캠핑일기`|`캠핑일기 작성`|`마이페이지`|
-|:-:|:-:|:-:|:-:|:-:|
 <br>
 <br>
 
