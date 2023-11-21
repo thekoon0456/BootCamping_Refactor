@@ -29,6 +29,7 @@
 ![Combine](https://img.shields.io/badge/Combine-F54A2A?style=for-the-badge&logo=swift&logoColor=white)
 ![Lottie](https://img.shields.io/badge/Lottie-007ACC?style=for-the-badge&logo=Lottie&logoColor=white)
 <br>
+<br>
 
 ## 📌주요 기능
 - 포토카드 뷰: 유저의 반응(좋아요, 댓글)이 좋은 사진을 포토카드화하여 다른 유저들의 클릭(?)을 유도<br>
