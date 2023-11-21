@@ -39,6 +39,14 @@
 - 마이 페이지: 내 캠핑 일정 등록 기능, 관심있는 캠핑장과 캠핑일기 북마크 및 관리<br>
 <br>
 
+## 🖐️담당 구현 파트
+- 메인 홈 탭 구현
+- 캠핑일기 탭 구현
+- 내 캠핑일기의 비공개 일기화면에서 FaceID 구현, AppStorage로 저장
+- 이미지 로딩, 캐싱
+- 다크모드 구현
+<br>
+
 ## 📱구동 화면
 |<img src="https://user-images.githubusercontent.com/114223237/222381783-de2153bc-5b53-49b7-af76-5c2af1d321b0.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222381623-6ee28409-21ee-4427-9c60-e1ce0e7f68dc.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222385759-ef3a9738-31e6-4f6c-8f2c-c1cd86fe218c.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222385743-e6acddcf-0ae0-4a09-a5dc-2658766bfd6c.gif"></img>|<img src="https://user-images.githubusercontent.com/114223237/222382137-6c9223de-2505-4486-a209-dfa6217d2fe6.gif"></img>
 |:-:|:-:|:-:|:-:|:-:|
@@ -48,15 +56,93 @@
 <br>
 
 ## ✅ 담당 트러블 슈팅
-### 제목
+### 앱 사진 로딩시 애니메이션 스켈레톤 뷰 구현
 <div markdown="1">
         
 ```
-내용
+이미지 로딩시 회색 화면을 스켈레톤 뷰로 구현었습니다.
+통신환경이 좋은 곳에서는 로딩에 문제가 없지만 해외같이 통신환경이 좋지 않은 곳에서는 화면이 멈춘 것 같은 문제가 있어서
+앱스토어에서 리젝을 당했고, 이를 해결하기 위해 로딩시 스켈레톤뷰에 반짝이는 애니메이션을 구현했습니다.
+ViewModifier로 애니메이션을 만들어 기존 코드를 수정하지 않으면서 사용성을 높였습니다.
 ```
 
 ```swift
+//스켈레톤 뷰 애니메이션 구현 ViewModifier
 
+public struct Shimmer: ViewModifier {
+    let animation: Animation
+    @State private var phase: CGFloat = 0
+
+    public init(animation: Animation = Self.defaultAnimation) {
+        self.animation = animation
+    }
+
+    public static let defaultAnimation = Animation.linear(duration: 1.5).repeatForever(autoreverses: false)
+
+    public init(duration: Double = 1.5, bounce: Bool = false, delay: Double = 0) {
+        self.animation = .linear(duration: duration)
+            .repeatForever(autoreverses: bounce)
+            .delay(delay)
+    }
+
+    public func body(content: Content) -> some View {
+        content
+            .modifier(
+                AnimatedMask(phase: phase).animation(animation)
+            )
+            .onAppear { phase = 0.8 }
+    }
+
+    struct AnimatedMask: AnimatableModifier {
+        var phase: CGFloat = 0
+
+        var animatableData: CGFloat {
+            get { phase }
+            set { phase = newValue }
+        }
+
+        func body(content: Content) -> some View {
+            content
+                .mask(GradientMask(phase: phase).scaleEffect(3))
+        }
+    }
+
+    struct GradientMask: View {
+        let phase: CGFloat
+        let centerColor = Color.gray.opacity(0.5)
+        let edgeColor = Color.gray.opacity(0.3)
+        @Environment(\.layoutDirection) private var layoutDirection
+
+        var body: some View {
+            let isRightToLeft = layoutDirection == .rightToLeft
+            LinearGradient(
+                gradient: Gradient(stops: [
+                    .init(color: edgeColor, location: phase),
+                    .init(color: centerColor, location: phase + 0.1),
+                    .init(color: edgeColor, location: phase + 0.2)
+                ]),
+                startPoint: isRightToLeft ? .bottomTrailing : .topLeading,
+                endPoint: isRightToLeft ? .topLeading : .bottomTrailing
+            )
+        }
+    }
+}
+```
+
+```swift
+//skeletonAnimation 함수로 적용
+
+public extension View {
+    @ViewBuilder func skeletonAnimation(
+        active: Bool = true, duration: Double = 1.5, bounce: Bool = false, delay: Double = 0
+    ) -> some View {
+        if active {
+            modifier(Shimmer(duration: duration, bounce: bounce, delay: delay))
+        } else {
+            self
+        }
+    }
+}
 ```
 </div>
 <br>
@@ -65,7 +151,6 @@
 - iOS 16.0 이상 iPhone 전 기종 지원
 - 다크모드 지원
 - Xcode 14.2
-<br>
 <br>
 
 ## 협업 방법

@@ -96,7 +96,6 @@ struct FirebaseBlockedUserService {
                        promise(.success(()))
                    }
                }
-           
        }
        .eraseToAnyPublisher()
    }

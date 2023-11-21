@@ -28,7 +28,6 @@ class FaceId: ObservableObject {
                         self.islocked = true
                     }
                 }
-                
             }
         } else {
             //인증 실패시
