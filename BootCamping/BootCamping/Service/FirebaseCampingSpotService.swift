@@ -6,9 +6,10 @@
 //
 
 import Combine
+import Foundation
+
 import Firebase
 import FirebaseFirestore
-import Foundation
 
 enum FirebaseCampingSpotServiceError: Error {
     case badSnapshot
@@ -25,6 +26,7 @@ enum FirebaseCampingSpotServiceError: Error {
 }
 
 //MARK: - 캠핑장 리스트 페이지네이션에 필요한 구조체
+
 struct ReadDocuments {
     var campingSpots: [CampingSpot]?
     //addr1
@@ -42,6 +44,7 @@ struct ReadDocuments {
 }
 
 //MARK: - 캠핑장 리스트 불러오기 위한 컴바인 서비스
+
 struct FirebaseCampingSpotService {
     
     let database = Firestore.firestore()
@@ -50,7 +53,9 @@ struct FirebaseCampingSpotService {
         Future<ReadDocuments, Error> { promise in
             //MARK: - 최초 read
             if readDocument.lastDoc == nil {
+                
                 //MARK: - 최초 캠핑장 위치로 read
+                
                 if readDocument.campingSpotLocation != [] {
                     database.collection("CampingSpotList")
                         .whereField("doNm", in: readDocument.campingSpotLocation)
@@ -154,6 +159,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -163,7 +169,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 최초 캠핑장 전망으로 read
+                
                 if readDocument.campingSpotView != [] {
                     database.collection("CampingSpotList")
                         .whereField("lctCl", isGreaterThanOrEqualTo: "\(readDocument.campingSpotView.first!)")
@@ -267,6 +275,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -276,7 +285,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 최초 캠핑장 이름으로 read
+                
                 if readDocument.campingSpotName != "" {
                     database.collection("CampingSpotList")
                         .whereField("facltNm", isGreaterThanOrEqualTo: "\(readDocument.campingSpotName)")
@@ -287,6 +298,7 @@ struct FirebaseCampingSpotService {
                                 promise(.failure(error))
                                 return
                             }
+                            
                             guard let snapshot = snapshot else {
                                 promise(.failure(FirebaseCampingSpotServiceError.badSnapshot))
                                 return
@@ -380,6 +392,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -389,7 +402,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 최초 캠핑장 아이디로 read
+                
                 if readDocument.campingSpotContenId != [] {
                     database.collection("CampingSpotList")
                         .whereField("contentId", in: readDocument.campingSpotContenId)
@@ -492,6 +507,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -501,7 +517,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 최초 캠핑장 주소로 read
+                
                 if readDocument.campingSpotAddr != "" {
                     database.collection("CampingSpotList")
                         .whereField("addr1", isGreaterThanOrEqualTo: "\(readDocument.campingSpotAddr)")
@@ -605,6 +623,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -615,9 +634,13 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 페이지네이션에서 쓰이는 read
+                
             } else {
+                
                 //MARK: - 페이지네이션에서 캠핑장 위치로 read
+                
                 if readDocument.campingSpotLocation != [] {
                     database.collection("CampingSpotList")
                         .whereField("doNm", in: readDocument.campingSpotLocation)
@@ -722,6 +745,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -731,7 +755,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 페이지네이션에서 캠핑장 전망으로 read
+                
                 if readDocument.campingSpotView != [] {
                     database.collection("CampingSpotList")
                         .whereField("lctCl", isGreaterThanOrEqualTo: "\(readDocument.campingSpotView.first!)")
@@ -836,6 +862,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -846,11 +873,13 @@ struct FirebaseCampingSpotService {
                             
                         }
                 }
+                
                 //MARK: - 페이지네이션에서 캠핑장 이름으로 read
+                
                 if readDocument.campingSpotName != "" {
                     database.collection("CampingSpotList")
                         .whereField("facltNm", isGreaterThanOrEqualTo: "\(readDocument.campingSpotName)")
-//                        .whereField("facltNm", isLessThan: "\(readDocument.campingSpotName)" + "\u{f8ff}")
+                    //                        .whereField("facltNm", isLessThan: "\(readDocument.campingSpotName)" + "\u{f8ff}")
                         .whereField("facltNm", isLessThan: "\u{f8ff}" + "\(readDocument.campingSpotName)" + "\u{f8ff}")
                         .start(afterDocument: readDocument.lastDoc!)
                         .limit(to: 10)
@@ -952,6 +981,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -961,7 +991,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 페이지네이션에서 캠핑장 아이디로 read
+                
                 if readDocument.campingSpotContenId != [] {
                     database.collection("CampingSpotList")
                         .whereField("contentId", in: readDocument.campingSpotContenId)
@@ -1065,6 +1097,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -1074,7 +1107,9 @@ struct FirebaseCampingSpotService {
                             }
                         }
                 }
+                
                 //MARK: - 페이지네이션에서 캠핑장 주소로 read
+                
                 if readDocument.campingSpotAddr != "" {
                     database.collection("CampingSpotList")
                         .whereField("addr1", isGreaterThanOrEqualTo: "\(readDocument.campingSpotAddr)")
@@ -1179,6 +1214,7 @@ struct FirebaseCampingSpotService {
                                     modifiedtime: docData["modifiedtime"] as? String ?? ""
                                 )
                             }
+                            
                             if snapshot.documents.count > 0 {
                                 readDocument.lastDoc = snapshot.documents.last!
                                 readDocument.campingSpots = campingSpots
@@ -1189,9 +1225,7 @@ struct FirebaseCampingSpotService {
                         }
                 }
             }
-            
         }
         .eraseToAnyPublisher()
     }
-    
 }
