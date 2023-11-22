@@ -8,6 +8,7 @@
 import Foundation
 
 // MARK: - DateValue 커스텀 캘린더를 그리기 위한 구조체
+
 struct DateValue: Identifiable {
     var id = UUID().uuidString
     var day: Int
@@ -15,6 +16,7 @@ struct DateValue: Identifiable {
 }
 
 // MARK: - Schedule 모델
+
 struct Schedule: Identifiable {
     var id: String // UUID().uuidString
     var title: String // 캠핑장 고유 contentId
