@@ -35,9 +35,7 @@ struct RealtimeCampingView: View {
                                         diaryStore.nextGetRealtimeDiaryCombine()
                                     }
                                 }
-                                
                             }
-                        
                     }
                 }
             }

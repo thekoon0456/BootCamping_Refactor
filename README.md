@@ -55,7 +55,84 @@
 |`캠핑장 검색`|`캠핑장 정보`|`내 캠핑일기`|`캠핑일기 작성`|`마이페이지`|
 <br>
 
-## ✅ 담당 기능 구현 트러블 슈팅
+## ✅ 담당 파트 기능 구현 트러블 슈팅
+### 캠핑일기 Cell 마다 좋아요, 댓글의 숫자가 제대로 표기되지 않는 문제 
+<div markdown="1">
+
+```
+기존에는 좋아요와 댓글 Data를 EnvironmentObject로 구성했었는데
+각 Cell의 DetailView로 들어갔다가 List로 다시 돌아왔을때
+화면에 보이는 모든 Cell의 좋아요와 댓글 숫자가 동기화되는 문제가 발생했습니다.
+diaryLikeStore와 commentStore를 각 Cell 마다 @StateObject로 구현하고
+해당 데이터를 DetailView와 Binding해서
+Cell마다 독립적으로 좋아요와 댓글 개수를 구현할 수 있었습니다.
+
+```
+
+```swift
+// 기존 EnvironmentObject를 StateObject로 리팩토링
+@StateObject var diaryLikeStore: DiaryLikeStore = DiaryLikeStore()
+@StateObject var commentStore: CommentStore = CommentStore()
+```
+
+```swift
+/MARK: - 좋아요, 댓글, 타임스탬프 구현
+
+var diaryDetailInfo: some View {
+    HStack {
+        Button {
+            //좋아요 버튼, 카운트
+            if diaryLikeStore.diaryLikeList.contains(wholeAuthStore.currentUser?.uid ?? "") {
+                diaryLikeStore.removeDiaryLikeCombine(diaryId: item.diary.id)
+            } else {
+                diaryLikeStore.addDiaryLikeCombine(diaryId: item.diary.id)
+                //탭틱
+                UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            }
+            diaryLikeStore.readDiaryLikeCombine(diaryId: item.diary.id)
+            
+        } label: {
+            Image(systemName: diaryLikeStore.diaryLikeList
+                .contains(wholeAuthStore.currentUser?.uid ?? "") ? "flame.fill" : "flame")
+                .foregroundColor(diaryLikeStore.diaryLikeList
+                    .contains(wholeAuthStore.currentUser?.uid ?? "") ? .red : .secondary)
+        }
+        
+        Text("\(diaryLikeStore.diaryLikeList.count)")
+            .font(.callout)
+            .foregroundColor(.secondary)
+            .padding(.leading, -2)
+            .frame(width: 20, alignment: .leading)
+        
+        //댓글버튼
+        navigationDestination(isPresented: $isCommentButtonClicked) {
+            DiaryDetailView(item: item)
+            }
+        Button {
+            isCommentButtonClicked.toggle()
+            diaryStore.isCommentButtonClicked = true
+        } label: {
+            Image(systemName: "message")
+                .font(.callout)
+                .foregroundColor(.secondary)
+            }
+        Text("\(commentStore.commentList.count)")
+            .font(.callout)
+            .foregroundColor(.secondary)
+            .frame(width: 20, alignment: .leading)
+            .padding(.leading, -2)
+        
+        Spacer()
+        
+        //작성 경과시간
+        Text("\(TimestampToString.dateString(item.diary.diaryCreatedDate)) 전")
+            .font(.footnote)
+            .foregroundColor(.secondary)
+    }
+    .padding(.bottom, 15)
+}
+```
+
 ### 사용자가 사용하는 흐름에 따라 자연스럽게 시점 이동이 되지 않는 문제
 <div markdown="1">
 
