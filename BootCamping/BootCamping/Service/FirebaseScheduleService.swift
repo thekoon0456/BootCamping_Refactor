@@ -5,13 +5,13 @@
 //  Created by 박성민 on 2023/02/02.
 //
 
+import Combine
+import Foundation
+
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
-import Foundation
-import SwiftUI
 import FirebaseStorage
-import Combine
 
 enum FirebaseScheduleServiceError: Error {
     case badSnapshot
@@ -35,6 +35,7 @@ struct FirebaseScheduleService {
     let database = Firestore.firestore()
     
     //MARK: - Read FirebaseScheduleService
+    
     func readScheduleService() -> AnyPublisher<[Schedule], Error> {
         Future<[Schedule], Error> { promise in
             guard let userUID = Auth.auth().currentUser?.uid else { return }
@@ -48,10 +49,12 @@ struct FirebaseScheduleService {
                         promise(.failure(FirebaseScheduleServiceError.badSnapshot))
                         return
                     }
+                    
                     guard let snapshot = snapshot else {
                         promise(.failure(FirebaseScheduleServiceError.badSnapshot))
                         return
                     }
+                    
                     var schedules = [Schedule]()
                     
                     for document in snapshot.documents {
@@ -76,7 +79,7 @@ struct FirebaseScheduleService {
     }
     
     //MARK: - Create FirebaseScheduleService
-
+    
     func createScheduleService(schedule: Schedule) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             guard let userUID = Auth.auth().currentUser?.uid else { return }
@@ -105,7 +108,7 @@ struct FirebaseScheduleService {
     }
     
     //MARK: - Delete FirebaseScheduleService
-
+    
     func deleteScheduleService(schedule: Schedule) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             guard let userUID = Auth.auth().currentUser?.uid else { return }
