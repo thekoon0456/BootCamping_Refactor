@@ -6,14 +6,13 @@
 //
 
 import SwiftUI
-import Firebase
-import FirebaseCore
-import FirebaseAuth
-import GoogleSignIn
-import KakaoSDKCommon
-import KakaoSDKAuth
 
-//TODO: -구글, 카카오 로그인 연동 완료하기
+import Firebase
+import FirebaseAuth
+import FirebaseCore
+import GoogleSignIn
+import KakaoSDKAuth
+import KakaoSDKCommon
 
 class AppDelegate: NSObject, UIApplicationDelegate {
     func application(

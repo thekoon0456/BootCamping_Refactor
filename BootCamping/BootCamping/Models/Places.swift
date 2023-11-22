@@ -7,7 +7,8 @@
 
 import Foundation
 
-//MARK: - 캠핑장 리스트 구조체
+//MARK: - 캠핑장 리스트 Model
+
 struct CampingSpot: Codable, Hashable {
     let contentId: String
     let facltNm: String
