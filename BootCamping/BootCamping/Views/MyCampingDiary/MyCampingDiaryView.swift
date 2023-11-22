@@ -58,6 +58,8 @@ struct MyCampingDiaryView: View {
                     //탭틱
                     UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
                 }
+
+                
             }
             //다이어리 비어있을때 추가 화면
             DiaryEmptyView().zIndex(-1)

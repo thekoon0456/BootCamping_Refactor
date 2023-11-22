@@ -21,6 +21,7 @@ struct DiaryCellView: View {
     @StateObject var diaryLikeStore: DiaryLikeStore = DiaryLikeStore()
     @StateObject var commentStore: CommentStore = CommentStore()
     
+    
     @State var isBookmarked: Bool = false
     
     //선택한 다이어리 정보 변수입니다.
@@ -41,8 +42,8 @@ struct DiaryCellView: View {
     @AppStorage("faceId") var usingFaceId: Bool = false
     
     //댓글 버튼 클릭시 다음 화면으로 이동.
-    @State var isCommentButtonClicked = false
-
+    @State var tag:Int? = nil
+    
     @State private var isMore: Bool = false
     
     var diaryCampingSpot: [CampingSpot] {
@@ -80,8 +81,7 @@ struct DiaryCellView: View {
                 
                 VStack(alignment: .leading) {
                     HStack(alignment: .center){
-                        if (item.diary.uid == wholeAuthStore.currnetUserInfo!.id
-                            && item.diary.diaryIsPrivate) {
+                        if (item.diary.uid == wholeAuthStore.currnetUserInfo!.id && item.diary.diaryIsPrivate) {
                             isPrivateImage
                         }
                         diaryTitle
@@ -90,8 +90,7 @@ struct DiaryCellView: View {
                     if isMore && !item.diary.diaryAddress.isEmpty {
                         diaryFullContent
                         NavigationLink {
-                            CampingSpotDetailView(campingSpot: campingSpotStore.campingSpotList.first
-                                                  ?? campingSpotStore.campingSpot)
+                            CampingSpotDetailView(campingSpot: campingSpotStore.campingSpotList.first ?? campingSpotStore.campingSpot)
                         } label: {
                             diaryCampingLink
                                 .padding(.bottom, 10)
@@ -126,6 +125,15 @@ struct DiaryCellView: View {
                     .presentationDragIndicator(.hidden)
             }
         }
+        //editView 모달로 변경
+//        .sheet(isPresented: $isShowingEdit) {
+//            DiaryEditView(diaryTitle: item.diary.diaryTitle, diaryIsPrivate: item.diary.diaryIsPrivate, diaryContent: item.diary.diaryContent, campingSpotItem: diaryCampingSpot.first ?? campingSpotStore.campingSpot, campingSpot: diaryCampingSpot.first?.facltNm ?? "", item: item, selectedDate: item.diary.diaryVisitedDate)
+//
+//        }
+//        .fullScreenCover(isPresented: $isShowingEdit) {
+//            DiaryEditView(diaryTitle: item.diary.diaryTitle, diaryIsPrivate: item.diary.diaryIsPrivate, diaryContent: item.diary.diaryContent, campingSpotItem: diaryCampingSpot.first ?? campingSpotStore.campingSpot, campingSpot: diaryCampingSpot.first?.facltNm ?? "", item: item, selectedDate: item.diary.diaryVisitedDate)
+//
+//        }
         .padding(.top, UIScreen.screenWidth * 0.03)
         .onAppear {
             commentStore.readCommentsCombine(diaryId: item.diary.id)
@@ -160,7 +168,7 @@ private extension DiaryCellView {
                     .clipped()
             }
 //        }
-//        .pinchZoom()
+        .pinchZoom()
         .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth)
         .tabViewStyle(PageTabViewStyle())
         // .never 로 하면 배경 안보이고 .always 로 하면 인디케이터 배경 보입니다.
@@ -378,31 +386,45 @@ private extension DiaryCellView {
                 diaryLikeStore.readDiaryLikeCombine(diaryId: item.diary.id)
                 
             } label: {
-                Image(systemName: diaryLikeStore.diaryLikeList
-                    .contains(wholeAuthStore.currentUser?.uid ?? "") ? "flame.fill" : "flame")
-                    .foregroundColor(diaryLikeStore.diaryLikeList
-                        .contains(wholeAuthStore.currentUser?.uid ?? "") ? .red : .secondary)
+                Image(systemName: diaryLikeStore.diaryLikeList.contains(wholeAuthStore.currentUser?.uid ?? "") ? "flame.fill" : "flame")
+                    .foregroundColor(diaryLikeStore.diaryLikeList.contains(wholeAuthStore.currentUser?.uid ?? "") ? .red : .secondary)
             }
-            
             Text("\(diaryLikeStore.diaryLikeList.count)")
                 .font(.callout)
                 .foregroundColor(.secondary)
                 .padding(.leading, -2)
                 .frame(width: 20, alignment: .leading)
             
+            //댓글 버튼
+//            NavigationLink {
+//                DiaryDetailView(item: item)
+//                    .onTapGesture {
+//                        diaryStore.isCommentButtonClicked = true
+//                        print("---------------button: \(diaryStore.isCommentButtonClicked)")
+//                    }
+//            } label: {
+//                Image(systemName: "message")
+//                    .font(.callout)
+//                    .foregroundColor(.secondary)
+//
+//            }
             //댓글버튼.
-            navigationDestination(isPresented: $isCommentButtonClicked) {
-                DiaryDetailView(item: item)
+            NavigationLink(destination: DiaryDetailView(item: item), tag: 1, selection: $tag) {
+                EmptyView()
             }
-
+            
+            
+            
             Button {
-                isCommentButtonClicked.toggle()
+                self.tag = 1
                 diaryStore.isCommentButtonClicked = true
             } label: {
                 Image(systemName: "message")
                     .font(.callout)
                     .foregroundColor(.secondary)
             }
+
+
 
             Text("\(commentStore.commentList.count)")
                 .font(.callout)
@@ -411,7 +433,6 @@ private extension DiaryCellView {
                 .padding(.leading, -2)
             
             Spacer()
-            
             //작성 경과시간
             Text("\(TimestampToString.dateString(item.diary.diaryCreatedDate)) 전")
                 .font(.footnote)

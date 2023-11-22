@@ -342,7 +342,7 @@ private extension WeeklyDiaryDetailView {
                 .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth)
                 .clipped()
         }
-//        .pinchZoom()
+        .pinchZoom()
         .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth)
         .tabViewStyle(PageTabViewStyle())
         .indexViewStyle(PageIndexViewStyle(backgroundDisplayMode: .never))

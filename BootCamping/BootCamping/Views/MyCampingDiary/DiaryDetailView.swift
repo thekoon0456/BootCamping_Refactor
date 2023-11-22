@@ -19,7 +19,7 @@ struct DiaryDetailView: View {
     @EnvironmentObject var blockedUserStore: BlockedUserStore
     @EnvironmentObject var reportStore: ReportStore
     @Environment(\.dismiss) private var dismiss
-    
+
     @StateObject var campingSpotStore: CampingSpotStore = CampingSpotStore()
     @StateObject var diaryLikeStore: DiaryLikeStore = DiaryLikeStore()
     @StateObject var commentStore: CommentStore = CommentStore()
@@ -71,6 +71,7 @@ struct DiaryDetailView: View {
                         
                         Group {
                             diaryDetailTitle
+                            
                             diaryDetailContent
                             
                             if !campingSpotStore.campingSpotList.isEmpty {
@@ -80,13 +81,9 @@ struct DiaryDetailView: View {
                             diaryDetailInfo
                             
                             Divider()
-                            
                             //댓글
                             ForEach(commentStore.commentList) { comment in
-                                DiaryCommentCellView(commentStore: commentStore,
-                                                     scrollViewHelper: scrollViewHelper,
-                                                     item2: item,
-                                                     item: comment)
+                                DiaryCommentCellView(commentStore: commentStore, scrollViewHelper: scrollViewHelper, item2: item, item: comment)
                             }
                         }
                         .padding(.horizontal, UIScreen.screenWidth * 0.03)
@@ -95,6 +92,7 @@ struct DiaryDetailView: View {
                             .frame(height: 0.1)
                             .id(bottomID)
                         Spacer()
+
                     }
                     .task {
                         //이전화면에서 댓글버튼 눌렀다면 바로 키보드 나오게
@@ -112,8 +110,8 @@ struct DiaryDetailView: View {
                     uiScrollView.delegate = scrollViewHelper
                 })
                 .padding(.bottom, 0.1)
-                
-                HStack {
+
+                 HStack {
                     if wholeAuthStore.currnetUserInfo?.profileImageURL != "" {
                         WebImage(url: URL(string: wholeAuthStore.currnetUserInfo!.profileImageURL))
                             .resizable()
@@ -137,22 +135,15 @@ struct DiaryDetailView: View {
                                 proxy.scrollTo(commentButtonID, anchor: .top)
                             }
                         }
-                    
+
                     Button {
-                        commentStore.createCommentCombine(diaryId: item.diary.id,
-                                                          comment: Comment(id: UUID().uuidString,
-                                                                           diaryId: item.diary.id,
-                                                                           uid: wholeAuthStore.currnetUserInfo?.id ?? "" ,
-                                                                           nickName: wholeAuthStore.currnetUserInfo?.nickName ?? "",
-                                                                           profileImage: wholeAuthStore.currnetUserInfo?.profileImageURL ?? "",
-                                                                           commentContent: diaryComment, commentCreatedDate: Timestamp()))
+                        commentStore.createCommentCombine(diaryId: item.diary.id, comment: Comment(id: UUID().uuidString, diaryId: item.diary.id, uid: wholeAuthStore.currnetUserInfo?.id ?? "" , nickName: wholeAuthStore.currnetUserInfo?.nickName ?? "", profileImage: wholeAuthStore.currnetUserInfo?.profileImageURL ?? "", commentContent: diaryComment, commentCreatedDate: Timestamp()))
                         commentStore.readCommentsCombine(diaryId: item.diary.id)
-                        
                         withAnimation {
                             proxy.scrollTo(bottomID, anchor: .bottom)
                         }
                         diaryComment = ""
-                        
+
                     } label: {
                         Image(systemName: "paperplane")
                             .font(.title3)
@@ -245,55 +236,55 @@ private extension DiaryDetailView {
             .padding(.bottom, 25)
     }
     
-    //MARK: - 방문한 캠핑장 링크
-    var diaryCampingLink: some View {
-        
-        HStack {
-            NavigationLink(destination: CampingSpotDetailView(campingSpot: campingSpotStore.campingSpotList.first ?? campingSpotStore.campingSpot), tag: 1, selection: $tag) {
-                EmptyView()
-            }
-            
-            Button {
-                self.tag = 1
-                dismissKeyboard()
-            } label: {
-                HStack {
-                    WebImage(url: URL(string: campingSpotStore.campingSpotList.first?.firstImageUrl == "" ? campingSpotStore.noImageURL : campingSpotStore.campingSpotList.first?.firstImageUrl ?? ""))
-                        .resizable()
-                        .frame(width: 60, height: 60)
-                        .padding(.trailing, 5)
-                    
-                    VStack(alignment: .leading, spacing: 3) {
-                        Text(campingSpotStore.campingSpotList.first?.facltNm ?? "")
-                            .multilineTextAlignment(.leading)
-                            .font(.headline)
-                        HStack {
-                            Text("\(campingSpotStore.campingSpotList.first?.doNm ?? "") \(campingSpotStore.campingSpotList.first?.sigunguNm ?? "")")
-                                .padding(.vertical, 2)
-                            Spacer()
+        //MARK: - 방문한 캠핑장 링크
+        var diaryCampingLink: some View {
+    
+            HStack {
+                NavigationLink(destination: CampingSpotDetailView(campingSpot: campingSpotStore.campingSpotList.first ?? campingSpotStore.campingSpot), tag: 1, selection: $tag) {
+                    EmptyView()
+                }
+    
+                Button {
+                    self.tag = 1
+                    dismissKeyboard()
+                } label: {
+                    HStack {
+                        WebImage(url: URL(string: campingSpotStore.campingSpotList.first?.firstImageUrl == "" ? campingSpotStore.noImageURL : campingSpotStore.campingSpotList.first?.firstImageUrl ?? ""))
+                            .resizable()
+                            .frame(width: 60, height: 60)
+                            .padding(.trailing, 5)
+    
+                        VStack(alignment: .leading, spacing: 3) {
+                            Text(campingSpotStore.campingSpotList.first?.facltNm ?? "")
+                                .multilineTextAlignment(.leading)
+                                .font(.headline)
+                            HStack {
+                                Text("\(campingSpotStore.campingSpotList.first?.doNm ?? "") \(campingSpotStore.campingSpotList.first?.sigunguNm ?? "")")
+                                    .padding(.vertical, 2)
+                                Spacer()
+                            }
+                            .font(.footnote)
+                            .foregroundColor(.secondary)
                         }
-                        .font(.footnote)
-                        .foregroundColor(.secondary)
-                    }
-                    .foregroundColor(.bcBlack)
-                    
-                    Spacer()
-                    
+                        .foregroundColor(.bcBlack)
+                        
+                        Spacer()
+    
                     Image(systemName: "chevron.right.2")
                         .font(.footnote)
                         .foregroundColor(.secondary)
+                    }
+                    .padding(10)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .stroke(Color.bcDarkGray, lineWidth: 1)
+                            .opacity(0.3)
+                    )
                 }
-                .padding(10)
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .stroke(Color.bcDarkGray, lineWidth: 1)
-                        .opacity(0.3)
-                )
+                .padding(.bottom, 10)
+                .foregroundColor(.clear)
             }
-            .padding(.bottom, 10)
-            .foregroundColor(.clear)
         }
-    }
     
     
     //MARK: - 좋아요, 댓글, 타임스탬프
