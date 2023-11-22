@@ -12,6 +12,7 @@ import FirebaseAuth
 import Firebase
 
 //MARK: - 댓글 서비스 에러 처리
+
 enum FirebaseCommentServiceError: Error {
     case badSnapshot
     case createCommentError
@@ -39,6 +40,7 @@ struct FirebaseCommentService {
     let database = Firestore.firestore()
     
     //MARK: - Read FirebaseCommentService
+    
     func readCommentsService(diaryId: String) -> AnyPublisher<[Comment], Error> {
         Future<[Comment], Error> { promise in
             database.collection("Diarys")
@@ -50,6 +52,7 @@ struct FirebaseCommentService {
                         promise(.failure(error))
                         return
                     }
+                    
                     guard let snapshot = snapshot else {
                         promise(.failure(FirebaseCommentServiceError.badSnapshot))
                         return
@@ -66,9 +69,8 @@ struct FirebaseCommentService {
                                        profileImage: d["profileImage"] as? String ?? "",
                                        commentContent: d["commentContent"] as? String ?? "",
                                        commentCreatedDate: d["commentCreatedDate"] as? Timestamp ?? Timestamp()
-//                                       ,commentLike: d["commentLike"] as? [String] ?? []
-                                       
-                        )}
+                        )
+                    }
                     promise(.success(comments))
                 }
         }
@@ -76,49 +78,44 @@ struct FirebaseCommentService {
     }
     
     //MARK: - Create FirebaseCommentService
+    
     func createCommentService(diaryId: String, comment: Comment) -> AnyPublisher<Void, Error> {
-       
         Future<Void, Error> { promise in
-
             self.database.collection("Diarys")
                 .document(diaryId)
-                .collection("Comment").document(comment.id).setData([
-                "diaryId": comment.diaryId,
-                "uid": comment.uid,
-                "nickName": comment.nickName,
-                "profileImage": comment.profileImage,
-                "commentContent": comment.commentContent,
-                "commentCreatedDate": comment.commentCreatedDate,
-//                "commentLike": comment.commentLike,
-            ]) { error in
+                .collection("Comment").document(comment.id).setData(
+                    ["diaryId": comment.diaryId,
+                     "uid": comment.uid,
+                     "nickName": comment.nickName,
+                     "profileImage": comment.profileImage,
+                     "commentContent": comment.commentContent,
+                     "commentCreatedDate": comment.commentCreatedDate,]
+                ) { error in
                     if let error = error {
                         print(error)
                         promise(.failure(FirebaseCommentServiceError.createCommentError))
-
                     } else {
                         promise(.success(()))
                     }
-                    
                 }
         }
         .eraseToAnyPublisher()
     }
     
     //MARK: - Delete FirebaseCommentService
+    
     func deleteCommentService(diaryId: String, comment: Comment) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             self.database.collection("Diarys")
                 .document(diaryId)
-                .collection("Comment").document(comment.id).delete()
-            { error in
-                if let error = error {
-                    print(error)
-                    promise(.failure(FirebaseCommentServiceError.deleteCommentError))
-                } else {
-                    promise(.success(()))
+                .collection("Comment").document(comment.id).delete() { error in
+                    if let error = error {
+                        print(error)
+                        promise(.failure(FirebaseCommentServiceError.deleteCommentError))
+                    } else {
+                        promise(.success(()))
+                    }
                 }
-            }
-            
         }
         .eraseToAnyPublisher()
     }
