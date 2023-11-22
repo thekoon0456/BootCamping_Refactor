@@ -20,6 +20,7 @@ struct SplashScreenView: View {
         } else {
             ZStack {
                 Color.bcGreen
+                
                 VStack {
                     LottieView()
                         .frame(width: 150, height: 150)
@@ -34,6 +35,7 @@ struct SplashScreenView: View {
                         self.opacity = 1.0
                     }
                 }
+                
                 VStack {
                     Image("loginName")
                         .resizable()
@@ -41,7 +43,6 @@ struct SplashScreenView: View {
                         .frame(width: 220)
                         .offset(x: 0, y: 40)
                 }
-
             }
             .ignoresSafeArea()
         }
