@@ -7,12 +7,13 @@
 
 import Foundation
 import Combine
-import KakaoSDKAuth
-import KakaoSDKUser
+
 import Firebase
+import FirebaseAuth
 import FirebaseCore
 import FirebaseFirestore
-import FirebaseAuth
+import KakaoSDKAuth
+import KakaoSDKUser
 
 // MARK: - 카카오 로그인 서비스
 
