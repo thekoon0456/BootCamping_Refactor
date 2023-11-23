@@ -4,13 +4,13 @@
 //
 //  Created by 박성민 on 2023/02/03.
 //
-
+import Combine
 import Foundation
+
 import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
-import Combine
 
 //MARK: - 유저정보 에러 처리
 
@@ -41,6 +41,7 @@ struct FirebaseUserService {
     let database = Firestore.firestore()
     
     //MARK: - Read FirebaseUserService
+    
     func readUserListService() -> AnyPublisher<[User], Error> {
         Future<[User], Error> { promise in
             database.collection("UserList")
@@ -55,8 +56,8 @@ struct FirebaseUserService {
                         promise(.failure(FirebaseUserServiceError.badSnapshot))
                         return
                     }
-                    var users = [User]()
                     
+                    var users = [User]()
                     
                     users = snapshot.documents.map { d in
                         return User(id: d.documentID,
@@ -66,8 +67,8 @@ struct FirebaseUserService {
                                     userEmail: d["userEmail"] as? String ?? "",
                                     bookMarkedDiaries: d["bookMarkedDiaries"] as? [String] ?? [],
                                     bookMarkedSpot: d["bookMarkedSpot"] as? [String] ?? [],
-                                    blockedUser: d["blockedUser"] as? [String] ?? []
-                        )}
+                                    blockedUser: d["blockedUser"] as? [String] ?? [])
+                    }
                     
                     promise(.success(users))
                 }
@@ -85,8 +86,8 @@ struct FirebaseUserService {
                         print(error)
                         promise(.failure(FirebaseUserServiceError.badSnapshot))
                         return
-                        
                     }
+                    
                     guard let snapshot = snapshot else {
                         promise(.failure(FirebaseUserServiceError.badSnapshot))
                         return
@@ -105,7 +106,7 @@ struct FirebaseUserService {
                     let bookMarkedDiaries: [String] = docData["bookMarkedDiaries"] as? [String] ?? []
                     let bookMarkedSpot: [String] = docData["bookMarkedSpot"] as? [String] ?? []
                     let blockedUser: [String] = docData["blockedUser"] as? [String] ?? []
-                        
+                    
                     let user: User = User(id: id, profileImageName: profileImageName, profileImageURL: profileImageURL, nickName: nickName, userEmail: userEmail, bookMarkedDiaries: bookMarkedDiaries, bookMarkedSpot: bookMarkedSpot, blockedUser: blockedUser)
                     
                     promise(.success(user))
@@ -115,22 +116,22 @@ struct FirebaseUserService {
     }
     
     //MARK: - Create FirebaseUserService
-
+    
     func createUserService(user: User) -> AnyPublisher<Void, Error> {
         
         let userNickName = user.nickName.components(separatedBy: "@").first ?? user.nickName
         
         return Future<Void, Error> { promise in
-            self.database.collection("UserList").document(user.id).setData([
-                "id": user.id,
-                "profileImageName": user.profileImageName,
-                "profileImageURL": user.profileImageURL,
-                "nickName": String(describing: userNickName),
-                "userEmail": user.userEmail,
-                "bookMarkedDiaries": user.bookMarkedDiaries,
-                "bookMarkedSpot": user.bookMarkedSpot,
-                "blockedUser": user.blockedUser
-            ]) { error in
+            self.database.collection("UserList").document(user.id).setData(
+                ["id": user.id,
+                 "profileImageName": user.profileImageName,
+                 "profileImageURL": user.profileImageURL,
+                 "nickName": String(describing: userNickName),
+                 "userEmail": user.userEmail,
+                 "bookMarkedDiaries": user.bookMarkedDiaries,
+                 "bookMarkedSpot": user.bookMarkedSpot,
+                 "blockedUser": user.blockedUser]
+            ) { error in
                 if let error = error {
                     print(error)
                     promise(.failure(FirebaseUserServiceError.createUserListError))
@@ -148,15 +149,14 @@ struct FirebaseUserService {
         Future<Void, Error> { promise in
             let storageRef = Storage.storage().reference().child("UserImages")
             
-            
             storageRef.child(user.profileImageName).delete { error in
                 if let error = error {
                     print("Error removing image from storage: \(error.localizedDescription)")
                 } else {
                     
                 }
-                
             }
+            
             if let image = image {
                 let imageName = UUID().uuidString
                 var imageURS: String = ""
@@ -167,10 +167,12 @@ struct FirebaseUserService {
                 let storageRef = Storage.storage().reference().child("UserImages")
                 let metadata = StorageMetadata()
                 metadata.contentType = "image/jpeg"
+                
                 let uploadTask = storageRef.child(imageName).putData(image, metadata: metadata)
                 uploadTask.observe(.success) { snapshot in
                     group.leave()
                 }
+                
                 uploadTask.observe(.failure) { snapshot in
                     if let error = snapshot.error as? NSError {
                         switch (StorageErrorCode(rawValue: error.code)!) {
@@ -190,9 +192,9 @@ struct FirebaseUserService {
                             promise(.failure(FirebaseUserServiceError.updateUserListError))
                             print("A separate error occurred. This is a good place to retry the upload.")
                         }
-                        
                     }
                 }
+                
                 group.notify(queue: .global(qos: .userInteractive)) {
                     group.enter()
                     let storageRef = Storage.storage().reference().child("UserImages")
@@ -204,14 +206,14 @@ struct FirebaseUserService {
                             imageURS = url!.absoluteString
                             group.leave()
                         }
-                        
                     }
+                    
                     group.notify(queue: .main) {
-                        self.database.collection("UserList").document(user.id).updateData([
-                            "profileImageName": imageName,
-                            "profileImageURL": imageURS,
-                            "nickName": user.nickName,
-                        ]) { error in
+                        self.database.collection("UserList").document(user.id).updateData(
+                            ["profileImageName": imageName,
+                             "profileImageURL": imageURS,
+                             "nickName": user.nickName,]
+                        ) { error in
                             if let error = error {
                                 print(error)
                                 promise(.failure(FirebaseUserServiceError.updateUserListError))
@@ -222,13 +224,12 @@ struct FirebaseUserService {
                     }
                 }
             } else {
-                
                 if user.userEmail == "" {
-                    self.database.collection("UserList").document(user.id).updateData([
-                        "profileImageName": "",
-                        "profileImageURL": "",
-                        "nickName": user.nickName,
-                    ]) { error in
+                    self.database.collection("UserList").document(user.id).updateData(
+                        ["profileImageName": "",
+                         "profileImageURL": "",
+                         "nickName": user.nickName,]
+                    ) { error in
                         if let error = error {
                             print(error)
                             promise(.failure(FirebaseUserServiceError.updateUserListError))
@@ -237,11 +238,11 @@ struct FirebaseUserService {
                         }
                     }
                 } else {
-                    self.database.collection("UserList").document(user.id).updateData([
-                        "profileImageName": user.profileImageName,
-                        "profileImageURL": user.profileImageURL,
-                        "nickName": user.nickName,
-                    ]) { error in
+                    self.database.collection("UserList").document(user.id).updateData(
+                        ["profileImageName": user.profileImageName,
+                         "profileImageURL": user.profileImageURL,
+                         "nickName": user.nickName,]
+                    ) { error in
                         if let error = error {
                             print(error)
                             promise(.failure(FirebaseUserServiceError.updateUserListError))
@@ -264,27 +265,25 @@ struct FirebaseUserService {
             let group = DispatchGroup()
             
             group.enter()
-                storageRef.child(user.profileImageName).delete { error in
-                    if let error = error {
-                        print("Error removing image from storage: \(error.localizedDescription)")
-                        promise(.failure(FirebaseUserServiceError.deleteUserListError))
-                    } else {
-                        group.leave()
-                    }
-                
+            storageRef.child(user.profileImageName).delete { error in
+                if let error = error {
+                    print("Error removing image from storage: \(error.localizedDescription)")
+                    promise(.failure(FirebaseUserServiceError.deleteUserListError))
+                } else {
+                    group.leave()
+                }
             }
             
             group.notify(queue: .main) {
-                
                 self.database.collection("UserList")
                     .document(user.id).delete() { error in
                         if let error = error {
                             print(error)
-                        promise(.failure(FirebaseUserServiceError.deleteUserListError))
-                    } else {
-                        promise(.success(()))
+                            promise(.failure(FirebaseUserServiceError.deleteUserListError))
+                        } else {
+                            promise(.success(()))
+                        }
                     }
-                }
             }
         }
         .eraseToAnyPublisher()
