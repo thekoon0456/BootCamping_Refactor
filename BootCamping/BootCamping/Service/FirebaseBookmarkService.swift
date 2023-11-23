@@ -6,6 +6,8 @@
 //
 
 import Combine
+import Foundation
+
 import Firebase
 
 enum FirebaseBookmarkSpotServiceError: Error {
@@ -25,15 +27,14 @@ enum FirebaseBookmarkSpotServiceError: Error {
     }
 }
 
-
 struct FirebaseBookmarkService {
     let database = Firestore.firestore()
     
     //MARK: - Add BookmarkCampingSpotService
+    
     func addBookmarkSpotService(campingSpotId: String) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             guard let userUID = Auth.auth().currentUser?.uid else { return }
-            
             self.database
                 .collection("UserList")
                 .document(userUID)
@@ -52,16 +53,16 @@ struct FirebaseBookmarkService {
     }
     
     //MARK: - Remove BookmarkCampingSpotService
+    
     func removeBookmarkSpotService(campingSpotId: String) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             guard let userUID = Auth.auth().currentUser?.uid else { return }
-            
             self.database
                 .collection("UserList")
                 .document(userUID)
-                .updateData([
-                    "bookMarkedSpot" : FieldValue.arrayRemove([campingSpotId])
-                ]) { error in
+                .updateData(
+                    ["bookMarkedSpot" : FieldValue.arrayRemove([campingSpotId])]
+                ) { error in
                     if let error = error {
                         print(error)
                         promise(.failure(FirebaseBookmarkSpotServiceError.removeBookmarkSpotError))
@@ -69,9 +70,7 @@ struct FirebaseBookmarkService {
                         promise(.success(()))
                     }
                 }
-            
         }
         .eraseToAnyPublisher()
     }
-    
 }
