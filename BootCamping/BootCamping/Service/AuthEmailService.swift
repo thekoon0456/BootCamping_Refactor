@@ -5,12 +5,12 @@
 //  Created by 박성민 on 2023/02/03.
 //
 
-import Foundation
-import Firebase
-import FirebaseFirestore
-import SwiftUI
-import FirebaseAuth
 import Combine
+import Foundation
+
+import Firebase
+import FirebaseAuth
+import FirebaseFirestore
 
 // MARK: - 이메일 로그인 서비스
 
@@ -19,6 +19,7 @@ struct AuthEmailService {
     let database = Firestore.firestore()
     
     // MARK: - checkPasswordFormat 비밀번호 정규식 체크
+    
     func checkPasswordFormat(password: String, confirmPassword: String) -> Bool {
         let passwordRegex = "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&()_+=-]).{8,50}$"
         
@@ -28,7 +29,9 @@ struct AuthEmailService {
             return false
         }
     }
+    
     // MARK: - checkAuthFormat 이메일 정합성 체크
+    
     func checkAuthFormat(userEmail: String) -> Bool {
         let emailRegex = "^([a-zA-Z0-9._-])+@[a-zA-Z0-9.-]+.[a-zA-Z]{3,20}$"
         return userEmail.range(of: emailRegex, options: .regularExpression) != nil
@@ -39,27 +42,33 @@ struct AuthEmailService {
     /// false = 중복 안됨
     func checkUserEmailDuplicatedService(userEmail: String) -> AnyPublisher<Bool, Error> {
         Future<Bool, Error> { promise in
-            database.collection("UserList").whereField("userEmail", isEqualTo: "\(userEmail)").getDocuments() { snapshot, error in
-                if let error = error {
-                    print(error)
-                    promise(.failure(AuthServiceError.emailDuplicated))
-                } else {
-                    if snapshot != nil {
+            database
+                .collection("UserList")
+                .whereField("userEmail", isEqualTo: "\(userEmail)")
+                .getDocuments() { snapshot, error in
+                    if let error = error {
+                        print(error)
                         promise(.failure(AuthServiceError.emailDuplicated))
                     } else {
-                        promise(.success(false))
+                        if snapshot != nil {
+                            promise(.failure(AuthServiceError.emailDuplicated))
+                        } else {
+                            promise(.success(false))
+                        }
                     }
                 }
-            }
         }
         .eraseToAnyPublisher()
     }
     
     // MARK: - 이메일 로그인
-    func authSignInService(userEmail: String, password: String) -> AnyPublisher<Firebase.User, Error> {
+    
+    func authSignInService(
+        userEmail: String,
+        password: String
+    ) -> AnyPublisher<Firebase.User, Error> {
         Future<Firebase.User, Error> { promise in
             Auth.auth().signIn(withEmail: userEmail, password: password) { result, error in
-                
                 if let error = error {
                     print(error)
                     promise(.failure(AuthServiceError.signInError))
@@ -76,14 +85,17 @@ struct AuthEmailService {
     }
     
     // MARK: - 이메일 회원가입
-    func authSignUpService(userEmail: String, password: String, confirmPassword: String) -> AnyPublisher<String, Error> {
+    
+    func authSignUpService(
+        userEmail: String,
+        password: String,
+        confirmPassword: String
+    ) -> AnyPublisher<String, Error> {
         Future<String, Error> { promise in
             
             var userUID: String = ""
             
-            
             let group = DispatchGroup()
-            
             
             group.enter()
             if checkPasswordFormat(password: password, confirmPassword: confirmPassword) && checkAuthFormat(userEmail: userEmail) {
@@ -116,13 +128,10 @@ struct AuthEmailService {
                             promise(.failure(AuthServiceError.signUpError))
                         }
                     }
-                    
-                    
                 }
             }
         }
         .eraseToAnyPublisher()
     }
-
 }
 
