@@ -5,8 +5,9 @@
 //  Created by Deokhun KIM on 2023/02/08.
 //
 
-
 import Combine
+import Foundation
+
 import Firebase
 
 enum FirebaseDiaryLikeServiceError: Error {
@@ -26,11 +27,11 @@ enum FirebaseDiaryLikeServiceError: Error {
     }
 }
 
-
 struct FirebaseDiaryLikeService {
     let database = Firestore.firestore()
     
     //MARK: - Read diaryLikeService
+    
     func readDiaryLikeService(diaryId: String) -> AnyPublisher<[String], Error> {
         Future<[String], Error> { promise in
             database.collection("Diarys")
@@ -40,6 +41,7 @@ struct FirebaseDiaryLikeService {
                         promise(.failure(error))
                         return
                     }
+                    
                     guard let snapshot = snapshot else {
                         promise(.failure(FirebaseDiaryLikeServiceError.badSnapshot))
                         return
@@ -49,10 +51,11 @@ struct FirebaseDiaryLikeService {
                         promise(.failure(FirebaseDiaryLikeServiceError.badSnapshot))
                         return
                     }
+                    
                     //document 가져오기
                     let diaryLike: [String] = docData["diaryLike"] as? [String] ?? []
                     var diaryLikes = diaryLike
-
+                    
                     promise(.success(diaryLikes))
                 }
         }
@@ -60,6 +63,7 @@ struct FirebaseDiaryLikeService {
     }
     
     //MARK: - Add diaryLikeService
+    
     func addDiaryLikeService(diaryId: String) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -67,9 +71,9 @@ struct FirebaseDiaryLikeService {
             self.database
                 .collection("Diarys")
                 .document(diaryId)
-                .updateData([
-                    "diaryLike" : FieldValue.arrayUnion([uid])
-                ]) { error in
+                .updateData(
+                    ["diaryLike" : FieldValue.arrayUnion([uid])]
+                ) { error in
                     if let error = error {
                         print(error)
                         promise(.failure(FirebaseDiaryLikeServiceError.addDiaryLikeError))
@@ -82,6 +86,7 @@ struct FirebaseDiaryLikeService {
     }
     
     //MARK: - Remove BookmarkDiaryService
+    
     func removeDiaryLikeService(diaryId: String) -> AnyPublisher<Void, Error> {
         Future<Void, Error> { promise in
             guard let uid = Auth.auth().currentUser?.uid else { return }
@@ -89,9 +94,9 @@ struct FirebaseDiaryLikeService {
             self.database
                 .collection("Diarys")
                 .document(diaryId)
-                .updateData([
-                    "diaryLike" : FieldValue.arrayRemove([uid])
-                ]) { error in
+                .updateData(
+                    ["diaryLike" : FieldValue.arrayRemove([uid])]
+                ) { error in
                     if let error = error {
                         print(error)
                         promise(.failure(FirebaseDiaryLikeServiceError.removeDiaryLikeError))
@@ -99,9 +104,7 @@ struct FirebaseDiaryLikeService {
                         promise(.success(()))
                     }
                 }
-            
         }
         .eraseToAnyPublisher()
     }
-    
 }
