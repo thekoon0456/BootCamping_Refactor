@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct OnboardingTabView: View {
+    
     @Binding var isFirstLaunching: Bool
     
     var body: some View {
@@ -20,7 +21,6 @@ struct OnboardingTabView: View {
             
             // 페이지 3: 캠핑노트
             DescribeDiaryView(isFirstLaunching: $isFirstLaunching)
-            
         }
         .ignoresSafeArea()
         .tabViewStyle(.page(indexDisplayMode: .always))
