@@ -5,8 +5,6 @@
 //  Created by 차소민 on 2023/01/19.
 //
 
-import Foundation
-
 import Firebase
 
 struct Comment:Identifiable, Hashable {

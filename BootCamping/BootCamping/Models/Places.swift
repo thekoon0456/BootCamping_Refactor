@@ -5,8 +5,6 @@
 //  Created by Donghoon Bae on 2022/11/14.
 //
 
-import Foundation
-
 //MARK: - 캠핑장 리스트 Model
 
 struct CampingSpot: Codable, Hashable {
@@ -91,27 +89,4 @@ struct CampingSpot: Codable, Hashable {
     let firstImageUrl: String
     let createdtime: String
     let modifiedtime: String
-}
-
-// 카테고리 별 데이터를 리턴해주는 ObservableObject 추가 (현재 안씀)
-class PlaceStore: ObservableObject {
-    @Published var places: [CampingSpot] = []
-    @Published var selectedCategory: String = "all"
-    
-    func returnPlaces() -> [CampingSpot] {
-        switch selectedCategory {
-        case "all" :
-            return places
-        case "일반야영장":
-            return places.filter { $0.induty.contains("일반야영장")}
-        case "자동차야영장" :
-            return places.filter { $0.induty.contains("자동차야영장")}
-        case "글램핑":
-            return places.filter { $0.induty.contains("글램핑")}
-        case "카라반":
-            return places.filter { $0.induty.contains("카라반")}
-        default :
-            return places
-        }
-    }
 }

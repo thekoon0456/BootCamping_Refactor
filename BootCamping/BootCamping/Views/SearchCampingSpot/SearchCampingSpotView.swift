@@ -4,11 +4,13 @@
 //
 //  Created by Deokhun KIM on 2023/01/17.
 //
+
+import SwiftUI
+
 import Firebase
 import FirebaseAnalytics
 import FirebaseAnalyticsSwift
 import SDWebImageSwiftUI
-import SwiftUI
 
 struct SearchCampingSpotView: View {
     
@@ -62,7 +64,6 @@ struct SearchCampingSpotView: View {
     @State var keywordForParameter: String = ""
     @State var isSearching: Bool = false
     
-
     var body: some View {
         VStack {
             ScrollView {

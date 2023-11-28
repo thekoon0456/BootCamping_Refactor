@@ -5,9 +5,9 @@
 //  Created by Deokhun KIM on 2023/01/17.
 //
 
-import CoreData
-import FirebaseAuth
 import SwiftUI
+
+import FirebaseAuth
 import FirebaseAnalytics
 
 struct ContentView: View {

@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+
 import Firebase
 import SDWebImageSwiftUI
 
 struct WeeklyPopulerCampingView: View {
+    
     @EnvironmentObject var diaryStore: DiaryStore
     @EnvironmentObject var commentStore: CommentStore
     @EnvironmentObject var diaryLikeStore: DiaryLikeStore
@@ -22,19 +24,19 @@ struct WeeklyPopulerCampingView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack {
                     // 차단한 유저의 글을 제외하고 보여준다
-                    ForEach(diaryStore.popularDiaryList.filter{ !wholeAuthStore.currnetUserInfo!.blockedUser.contains($0.diary.uid) }, id: \.self) { item in
+                    ForEach(diaryStore.popularDiaryList.filter { !wholeAuthStore.currnetUserInfo!.blockedUser.contains($0.diary.uid) }, id: \.self) { item in
                         NavigationLink {
                             WeeklyDiaryDetailView(item: item)
                         } label: {
                             ZStack(alignment: .topLeading) {
                                 PhotoCardFrame(image: item.diary.diaryImageURLs[0])
-                                LinearGradient(gradient: Gradient(colors: [Color.bcBlack.opacity(0.3), Color.clear]), startPoint: .top, endPoint: .bottom)
+                                LinearGradient(gradient: Gradient(colors: [Color.bcBlack.opacity(0.3), Color.clear]),
+                                               startPoint: .top, endPoint: .bottom)
                                     .cornerRadius(20)
                                 PhotoMainStory(item: item.diary)
                             }
                             .modifier(PhotoCardModifier())
                         }
-
                     }
                 }
             }
@@ -52,6 +54,7 @@ struct WeeklyPopulerCampingView: View {
 
 //MARK: - 포토카드 프레임
 struct PhotoCardFrame: View {
+    
     var image: String
     
     var body: some View {
@@ -85,6 +88,7 @@ struct PhotoCardFrame: View {
 
 //MARK: - 포토카드 위 글씨
 struct PhotoMainStory: View {
+    
     @EnvironmentObject var wholeAuthStore: WholeAuthStore
     @EnvironmentObject var diaryStore: DiaryStore
     @StateObject var campingSpotStore: CampingSpotStore = CampingSpotStore()
@@ -123,7 +127,8 @@ struct PhotoMainStory: View {
                 .font(.subheadline)
             }
             .onAppear {
-                campingSpotStore.readCampingSpotListCombine(readDocument: ReadDocuments(campingSpotContenId: [item.diaryAddress]))
+                campingSpotStore
+                    .readCampingSpotListCombine(readDocument: ReadDocuments(campingSpotContenId: [item.diaryAddress]))
             }
             .foregroundColor(.white)
             .kerning(-0.7)
@@ -131,14 +136,3 @@ struct PhotoMainStory: View {
         }
     }
 }
-
-
-
-//MARK: - 서버에서 받아오는 뷰라 프리뷰 불가능합니다.
-//struct WeeklyPopulerCampingView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        WeeklyPopulerCampingView()
-//            .environmentObject(DiaryStore())
-//            .environmentObject(AuthStore())
-//    }
-//}
