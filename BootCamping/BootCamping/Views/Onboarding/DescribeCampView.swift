@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DescribeCampView: View {
+    
     var body: some View {
         ZStack {
             Color.bcYellow
@@ -26,6 +27,5 @@ struct DescribeCampView: View {
                 .padding(.top, -80)
             }
         }
-        
     }
 }

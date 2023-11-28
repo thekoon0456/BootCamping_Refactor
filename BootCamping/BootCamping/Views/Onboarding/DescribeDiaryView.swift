@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct DescribeDiaryView: View {
+    
     @Binding var isFirstLaunching: Bool
+    
     var body: some View {
         ZStack {
             Color.bcYellow
@@ -16,7 +18,6 @@ struct DescribeDiaryView: View {
             VStack {
                 LottieView_onboard(filename: "diary_lottie")
                     .frame(width: 230, height: 230)
-                //    .offset(x: 0, y: -50)
                 VStack {
                     Text("부트캠핑과 함께 캠핑 노트에")
                         .padding(.bottom, 1)
@@ -24,9 +25,7 @@ struct DescribeDiaryView: View {
                 }
                 .font(.title2)
                 .kerning(-1)
-                .padding(.top, 50)
-                .padding(.bottom, 50)
-                
+                .padding([.top, .bottom], 50)
                 
                 VStack {
                     Button {

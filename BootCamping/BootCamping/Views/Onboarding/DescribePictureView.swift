@@ -8,6 +8,7 @@
 import SwiftUI
 
 struct DescribePictureView: View {
+    
     var body: some View {
         ZStack {
             Color.bcYellow
