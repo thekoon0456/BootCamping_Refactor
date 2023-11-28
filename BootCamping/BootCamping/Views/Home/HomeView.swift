@@ -7,7 +7,6 @@
 
 import SwiftUI
 
-
 struct HomeView: View {
     //상단 탭 뷰 선택변수
     @State private var selectedPicker: tapInfo = .weeklyPopulerCamping
@@ -15,11 +14,11 @@ struct HomeView: View {
     
     var body: some View {
         VStack{
-            //MARK: - 홈 상단 탭뷰입니다.
+            //홈 상단 탭뷰
             mainTapView(mainTap: selectedPicker)
         }
         .toolbar {
-            //MARK: - 홈 상단 피커 애니메이션입니다.
+            //홈 상단 피커
             ToolbarItem(placement: .principal) {
                 animate()
             }
@@ -29,13 +28,16 @@ struct HomeView: View {
 }
 
 private extension HomeView {
-    //MARK: - 홈 상단 탭 enum입니다.
+    
+    //MARK: - 홈 상단 탭 enum
+    
     enum tapInfo : String, CaseIterable {
         case weeklyPopulerCamping = "주간 인기 캠핑"
         case realtimeCamping = "실시간 캠핑"
     }
     
     //MARK: - 홈 상단 탭
+    
     struct mainTapView : View {
         var mainTap : tapInfo
         
@@ -55,7 +57,8 @@ private extension HomeView {
         }
     }
     
-    //MARK: - 홈 상단 탭 피커 애니메이션 함수입니다.
+    //MARK: - 홈 상단 탭 피커 애니메이션 함수
+    
     @ViewBuilder
     private func animate() -> some View {
         VStack {
@@ -92,6 +95,5 @@ private extension HomeView {
             }
             .padding(15)
         }
-        
     }
 }
