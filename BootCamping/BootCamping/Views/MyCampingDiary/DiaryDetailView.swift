@@ -6,24 +6,25 @@
 //
 
 import SwiftUI
+
+import AlertToast
 import Firebase
 import FirebaseAnalytics
-import SDWebImageSwiftUI
 import Introspect
-import AlertToast
+import SDWebImageSwiftUI
 
 struct DiaryDetailView: View {
+    
     @EnvironmentObject var bookmarkStore: BookmarkStore
     @EnvironmentObject var wholeAuthStore: WholeAuthStore
     @EnvironmentObject var diaryStore: DiaryStore
     @EnvironmentObject var blockedUserStore: BlockedUserStore
     @EnvironmentObject var reportStore: ReportStore
     @Environment(\.dismiss) private var dismiss
-
+    
     @StateObject var campingSpotStore: CampingSpotStore = CampingSpotStore()
     @StateObject var diaryLikeStore: DiaryLikeStore = DiaryLikeStore()
     @StateObject var commentStore: CommentStore = CommentStore()
-    
     @StateObject var scrollViewHelper: ScrollViewHelper = ScrollViewHelper()
     
     var diaryCampingSpot: [CampingSpot] {
@@ -45,7 +46,6 @@ struct DiaryDetailView: View {
     
     // 현재 게시물의 신고 상태를 나타낼 변수
     @State private var reportState = ReportState.notReported
-    
     @State private var isShowingAcceptedToast = false
     @State private var isShowingBlockedToast = false
     
@@ -58,7 +58,7 @@ struct DiaryDetailView: View {
     @FocusState private var inputFocused: Bool
     
     //버튼 클릭시 캠핑장 상세뷰로 이동.
-    @State var tag:Int? = nil
+    @State var tag: Int? = nil
     
     var item: UserInfoDiary
     
@@ -83,7 +83,10 @@ struct DiaryDetailView: View {
                             Divider()
                             //댓글
                             ForEach(commentStore.commentList) { comment in
-                                DiaryCommentCellView(commentStore: commentStore, scrollViewHelper: scrollViewHelper, item2: item, item: comment)
+                                DiaryCommentCellView(commentStore: commentStore,
+                                                     scrollViewHelper: scrollViewHelper,
+                                                     item2: item,
+                                                     item: comment)
                             }
                         }
                         .padding(.horizontal, UIScreen.screenWidth * 0.03)
@@ -92,7 +95,7 @@ struct DiaryDetailView: View {
                             .frame(height: 0.1)
                             .id(bottomID)
                         Spacer()
-
+                        
                     }
                     .task {
                         //이전화면에서 댓글버튼 눌렀다면 바로 키보드 나오게
@@ -110,8 +113,8 @@ struct DiaryDetailView: View {
                     uiScrollView.delegate = scrollViewHelper
                 })
                 .padding(.bottom, 0.1)
-
-                 HStack {
+                
+                HStack {
                     if wholeAuthStore.currnetUserInfo?.profileImageURL != "" {
                         WebImage(url: URL(string: wholeAuthStore.currnetUserInfo!.profileImageURL))
                             .resizable()
@@ -135,15 +138,21 @@ struct DiaryDetailView: View {
                                 proxy.scrollTo(commentButtonID, anchor: .top)
                             }
                         }
-
+                    
                     Button {
-                        commentStore.createCommentCombine(diaryId: item.diary.id, comment: Comment(id: UUID().uuidString, diaryId: item.diary.id, uid: wholeAuthStore.currnetUserInfo?.id ?? "" , nickName: wholeAuthStore.currnetUserInfo?.nickName ?? "", profileImage: wholeAuthStore.currnetUserInfo?.profileImageURL ?? "", commentContent: diaryComment, commentCreatedDate: Timestamp()))
+                        commentStore.createCommentCombine(diaryId: item.diary.id,
+                                                          comment: Comment(id: UUID().uuidString,
+                                                                           diaryId: item.diary.id, uid: wholeAuthStore.currnetUserInfo?.id ?? "" ,
+                                                                           nickName: wholeAuthStore.currnetUserInfo?.nickName ?? "",
+                                                                           profileImage: wholeAuthStore.currnetUserInfo?.profileImageURL ?? "",
+                                                                           commentContent: diaryComment,
+                                                                           commentCreatedDate: Timestamp()))
                         commentStore.readCommentsCombine(diaryId: item.diary.id)
                         withAnimation {
                             proxy.scrollTo(bottomID, anchor: .bottom)
                         }
                         diaryComment = ""
-
+                        
                     } label: {
                         Image(systemName: "paperplane")
                             .font(.title3)
@@ -155,7 +164,6 @@ struct DiaryDetailView: View {
                 .foregroundColor(.bcDarkGray)
                 .padding(.vertical, 1)
                 .padding(.horizontal, UIScreen.screenWidth * 0.03)
-                
             }
             .padding(.top)
             .padding(.bottom)
@@ -164,14 +172,15 @@ struct DiaryDetailView: View {
             .onAppear{
                 commentStore.readCommentsCombine(diaryId: item.diary.id)
                 diaryLikeStore.readDiaryLikeCombine(diaryId: item.diary.id)
-                campingSpotStore.readCampingSpotListCombine(readDocument: ReadDocuments(campingSpotContenId: [item.diary.diaryAddress]))
+                campingSpotStore.readCampingSpotListCombine(
+                    readDocument: ReadDocuments(campingSpotContenId: [item.diary.diaryAddress])
+                )
             }
         }
         .onTapGesture {
             dismissKeyboard()
         }
     }
-    
 }
 
 private extension DiaryDetailView {
@@ -214,13 +223,14 @@ private extension DiaryDetailView {
     }
     
     // MARK: - 다이어리 공개 여부를 나타내는 이미지
+    
     private var isPrivateImage: some View {
         Image(systemName: "lock")
             .foregroundColor(Color.secondary)
     }
     
-    
     // MARK: -View : 다이어리 제목
+    
     var diaryDetailTitle: some View {
         Text(item.diary.diaryTitle)
             .font(.system(.title3, weight: .semibold))
@@ -230,61 +240,64 @@ private extension DiaryDetailView {
     }
     
     // MARK: -View : 다이어리 내용
+    
     var diaryDetailContent: some View {
         Text(item.diary.diaryContent)
             .multilineTextAlignment(.leading)
             .padding(.bottom, 25)
     }
     
-        //MARK: - 방문한 캠핑장 링크
-        var diaryCampingLink: some View {
+    //MARK: - 방문한 캠핑장 링크
     
-            HStack {
-                NavigationLink(destination: CampingSpotDetailView(campingSpot: campingSpotStore.campingSpotList.first ?? campingSpotStore.campingSpot), tag: 1, selection: $tag) {
-                    EmptyView()
-                }
-    
-                Button {
-                    self.tag = 1
-                    dismissKeyboard()
-                } label: {
-                    HStack {
-                        WebImage(url: URL(string: campingSpotStore.campingSpotList.first?.firstImageUrl == "" ? campingSpotStore.noImageURL : campingSpotStore.campingSpotList.first?.firstImageUrl ?? ""))
-                            .resizable()
-                            .frame(width: 60, height: 60)
-                            .padding(.trailing, 5)
-    
-                        VStack(alignment: .leading, spacing: 3) {
-                            Text(campingSpotStore.campingSpotList.first?.facltNm ?? "")
-                                .multilineTextAlignment(.leading)
-                                .font(.headline)
-                            HStack {
-                                Text("\(campingSpotStore.campingSpotList.first?.doNm ?? "") \(campingSpotStore.campingSpotList.first?.sigunguNm ?? "")")
-                                    .padding(.vertical, 2)
-                                Spacer()
-                            }
-                            .font(.footnote)
-                            .foregroundColor(.secondary)
+    var diaryCampingLink: some View {
+        HStack {
+            NavigationLink(destination: CampingSpotDetailView(campingSpot: campingSpotStore.campingSpotList.first ?? campingSpotStore.campingSpot), tag: 1, selection: $tag) {
+                EmptyView()
+            }
+            
+            Button {
+                self.tag = 1
+                dismissKeyboard()
+            } label: {
+                HStack {
+                    WebImage(url: URL(string: campingSpotStore.campingSpotList.first?.firstImageUrl == ""
+                                      ? campingSpotStore.noImageURL
+                                      : campingSpotStore.campingSpotList.first?.firstImageUrl ?? ""))
+                    .resizable()
+                    .frame(width: 60, height: 60)
+                    .padding(.trailing, 5)
+                    
+                    VStack(alignment: .leading, spacing: 3) {
+                        Text(campingSpotStore.campingSpotList.first?.facltNm ?? "")
+                            .multilineTextAlignment(.leading)
+                            .font(.headline)
+                        HStack {
+                            Text("\(campingSpotStore.campingSpotList.first?.doNm ?? "") \(campingSpotStore.campingSpotList.first?.sigunguNm ?? "")")
+                                .padding(.vertical, 2)
+                            Spacer()
                         }
-                        .foregroundColor(.bcBlack)
-                        
-                        Spacer()
-    
-                    Image(systemName: "chevron.right.2")
                         .font(.footnote)
                         .foregroundColor(.secondary)
                     }
-                    .padding(10)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 10)
-                            .stroke(Color.bcDarkGray, lineWidth: 1)
-                            .opacity(0.3)
-                    )
+                    .foregroundColor(.bcBlack)
+                    
+                    Spacer()
+                    
+                    Image(systemName: "chevron.right.2")
+                        .font(.footnote)
+                        .foregroundColor(.secondary)
                 }
-                .padding(.bottom, 10)
-                .foregroundColor(.clear)
+                .padding(10)
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.bcDarkGray, lineWidth: 1)
+                        .opacity(0.3)
+                )
             }
+            .padding(.bottom, 10)
+            .foregroundColor(.clear)
         }
+    }
     
     
     //MARK: - 좋아요, 댓글, 타임스탬프
@@ -314,7 +327,6 @@ private extension DiaryDetailView {
             Image(systemName: "message")
                 .font(.callout)
                 .foregroundColor(.secondary)
-            
             
             Text("\(commentStore.commentList.count)")
                 .font(.callout)

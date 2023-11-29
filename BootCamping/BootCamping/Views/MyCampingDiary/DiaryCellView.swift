@@ -6,11 +6,13 @@
 //
 
 import SwiftUI
-import SDWebImageSwiftUI
-import Firebase
+
 import AlertToast
+import Firebase
+import SDWebImageSwiftUI
 
 struct DiaryCellView: View {
+    
     @EnvironmentObject var bookmarkStore: BookmarkStore
     @EnvironmentObject var diaryStore: DiaryStore
     @EnvironmentObject var wholeAuthStore: WholeAuthStore
@@ -20,7 +22,6 @@ struct DiaryCellView: View {
     @StateObject var campingSpotStore: CampingSpotStore = CampingSpotStore()
     @StateObject var diaryLikeStore: DiaryLikeStore = DiaryLikeStore()
     @StateObject var commentStore: CommentStore = CommentStore()
-    
     
     @State var isBookmarked: Bool = false
     
@@ -57,16 +58,18 @@ struct DiaryCellView: View {
     var body: some View {
         VStack(alignment: .leading) {
             diaryUserProfile
+            
             //MARK: - 잠금상태 && Faceid 설정 일때 잠금화면
+            
             if item.diary.diaryIsPrivate && faceId.islocked == true {
                 VStack(alignment: .center) {
                     Button {
-                            faceId.authenticate()
+                        faceId.authenticate()
                     } label: {
-                            Image(systemName: "lock")
-                                .resizable()
-                                .padding()
-                                .foregroundColor(Color.bcGreen)
+                        Image(systemName: "lock")
+                            .resizable()
+                            .padding()
+                            .foregroundColor(Color.bcGreen)
                     }
                     .frame(height: UIScreen.screenWidth / 5)
                     .aspectRatio(contentMode: .fit)
@@ -102,7 +105,6 @@ struct DiaryCellView: View {
                     } else {
                         diaryLimitContent
                     }
-                
                 }
                 .padding(.horizontal, UIScreen.screenWidth * 0.03)
                 
@@ -115,34 +117,24 @@ struct DiaryCellView: View {
         }
         .sheet(isPresented: $isShowingUserReportAlert) {
             if reportState == .alreadyReported {
-                // 현재 다이어리의 reportState가 .alreadyReported인 경우 WaitingView(신고가 이미 접수되었음을 알려주는 뷰)를 나타낸다
+                // 현재 다이어리의 reportState가 .alreadyReported인 경우 WaitingView(신고가 이미 접수되었음을 알려주는 뷰) 나옴
                 WaitingView()
                     .presentationDetents([.fraction(0.3), .medium])
             } else {
-                // 현재 다이어리의 reportState가 .alreadyReported가 아닌 경우 ReportView를 띄워 신고가 가능하게 한다
+                // 현재 다이어리의 reportState가 .alreadyReported가 아닌 경우 ReportView를 띄워 신고가 가능하게
                 ReportView(reportState: $reportState, reportedDiaryId: item.diary.id)
                     .presentationDetents([.fraction(0.5), .medium, .large]) // 화면의 아래쪽 50%를 차지하는 시트를 만든다
                     .presentationDragIndicator(.hidden)
             }
         }
-        //editView 모달로 변경
-//        .sheet(isPresented: $isShowingEdit) {
-//            DiaryEditView(diaryTitle: item.diary.diaryTitle, diaryIsPrivate: item.diary.diaryIsPrivate, diaryContent: item.diary.diaryContent, campingSpotItem: diaryCampingSpot.first ?? campingSpotStore.campingSpot, campingSpot: diaryCampingSpot.first?.facltNm ?? "", item: item, selectedDate: item.diary.diaryVisitedDate)
-//
-//        }
-//        .fullScreenCover(isPresented: $isShowingEdit) {
-//            DiaryEditView(diaryTitle: item.diary.diaryTitle, diaryIsPrivate: item.diary.diaryIsPrivate, diaryContent: item.diary.diaryContent, campingSpotItem: diaryCampingSpot.first ?? campingSpotStore.campingSpot, campingSpot: diaryCampingSpot.first?.facltNm ?? "", item: item, selectedDate: item.diary.diaryVisitedDate)
-//
-//        }
         .padding(.top, UIScreen.screenWidth * 0.03)
         .onAppear {
             commentStore.readCommentsCombine(diaryId: item.diary.id)
-            //TODO: -함수 업데이트되면 넣기
             diaryLikeStore.readDiaryLikeCombine(diaryId: item.diary.id)
-            // 현재 다이어리가 신고된 다이어리인 경우 reportState를 .alreadyReported로, 그렇지 않은 경우 .notReported로 설정한다
-            reportState = (reportStore.reportedDiaries.filter{ reportedDiary in reportedDiary.reportedDiaryId == item.diary.id }.count != 0) ? ReportState.alreadyReported : ReportState.notReported
+            // 현재 다이어리가 신고된 다이어리인 경우 reportState를 .alreadyReported로, 그렇지 않은 경우 .notReported로
+            reportState = (reportStore.reportedDiaries.filter { reportedDiary in reportedDiary.reportedDiaryId == item.diary.id }.count != 0) ? ReportState.alreadyReported : ReportState.notReported
         }
-        // 다이어리의 상태가 nowReported(지금 신고된 경우)로 변경될 때 신고가 접수되었따는 토스트 알림을 뛰운다.
+        // 다이어리의 상태가 nowReported(지금 신고된 경우)로 변경될 때 신고가 접수되었따는 토스트 알림을 띄움
         .onChange(of: reportState) { newReportState in
             isShowingAcceptedToast = (reportState == ReportState.nowReported)
         }
@@ -152,22 +144,20 @@ struct DiaryCellView: View {
 private extension DiaryCellView {
     //MARK: - 메인 이미지
     var diaryImage: some View {
-//        TabView{
-            ForEach(item.diary.diaryImageURLs, id: \.self) { url in
-                WebImage(url: URL(string: url))
-                    .resizable()
-                    .placeholder {
-                        Rectangle()
-                            .foregroundColor(.secondary)
-                            .skeletonAnimation()
-                    }
-                    .indicator(.activity)
-                    .transition(.fade(duration: 0.5))
-                    .scaledToFill()
-                    .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth)
-                    .clipped()
-            }
-//        }
+        ForEach(item.diary.diaryImageURLs, id: \.self) { url in
+            WebImage(url: URL(string: url))
+                .resizable()
+                .placeholder {
+                    Rectangle()
+                        .foregroundColor(.secondary)
+                        .skeletonAnimation()
+                }
+                .indicator(.activity)
+                .transition(.fade(duration: 0.5))
+                .scaledToFill()
+                .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth)
+                .clipped()
+        }
         .pinchZoom()
         .frame(width: UIScreen.screenWidth, height: UIScreen.screenWidth)
         .tabViewStyle(PageTabViewStyle())
@@ -185,7 +175,6 @@ private extension DiaryCellView {
             }
             diaryLikeStore.readDiaryLikeCombine(diaryId: item.diary.id)
         }
-
     }
     
     //MARK: - 다이어리 작성자 프로필
@@ -215,43 +204,45 @@ private extension DiaryCellView {
             //유저 닉네임
             Text(item.diary.diaryUserNickName)
                 .font(.callout)
-                
+            
             Spacer()
+            
             //MARK: -...버튼 글 쓴 유저일때만 ...나타나도록
+            
             if item.diary.uid == Auth.auth().currentUser?.uid {
                 alertMenu
-                 //   .padding(.top, 5)
+                //   .padding(.top, 5)
             }
             else {
                 reportAlertMenu
-                  //  .padding(.top, 5)
+                //  .padding(.top, 5)
             }
             
         }
         .padding(.horizontal, UIScreen.screenWidth * 0.03)
-
+        
     }
     
     
     //MARK: - Alert Menu 버튼
+    
     var alertMenu: some View {
-        //MARK: - ... 버튼입니다.
+        
+        //MARK: - ... 버튼
+        
         Menu {
             //기존 버튼
             NavigationLink {
-                DiaryEditView(diaryTitle: item.diary.diaryTitle, diaryIsPrivate: item.diary.diaryIsPrivate, diaryContent: item.diary.diaryContent, campingSpotItem: diaryCampingSpot.first ?? campingSpotStore.campingSpot, campingSpot: diaryCampingSpot.first?.facltNm ?? "", item: item, selectedDate: item.diary.diaryVisitedDate)
+                DiaryEditView(diaryTitle: item.diary.diaryTitle,
+                              diaryIsPrivate: item.diary.diaryIsPrivate,
+                              diaryContent: item.diary.diaryContent,
+                              campingSpotItem: diaryCampingSpot.first ?? campingSpotStore.campingSpot,
+                              campingSpot: diaryCampingSpot.first?.facltNm ?? "",
+                              item: item, selectedDate: item.diary.diaryVisitedDate)
             } label: {
                 Text("수정하기")
             }
-            
-//            //Edit View 모달로 변경하려면 이거 쓰기
-//            Button {
-//                self.isShowingEdit.toggle()
-//            } label: {
-//                Text("수정하기")
-//            }
 
-            
             Button {
                 isShowingDeleteAlert = true
             } label: {
@@ -284,7 +275,9 @@ private extension DiaryCellView {
                 .font(.title3)
                 .frame(width: 30,height: 30)
         }
-        .confirmationDialog("알림", isPresented: $isShowingConfirmationDialog, titleVisibility: .hidden, actions: {
+        .confirmationDialog("알림", isPresented: $isShowingConfirmationDialog,
+                            titleVisibility: .hidden,
+                            actions: {
             Button("게시물 신고하기", role: .destructive) {
                 isShowingUserReportAlert.toggle()
             }
@@ -322,7 +315,9 @@ private extension DiaryCellView {
                 .foregroundColor(.secondary)
                 .onTapGesture {
                     isMore.toggle()
-                    campingSpotStore.readCampingSpotListCombine(readDocument: ReadDocuments(campingSpotContenId: [item.diary.diaryAddress]))
+                    campingSpotStore.readCampingSpotListCombine(
+                        readDocument: ReadDocuments(campingSpotContenId: [item.diary.diaryAddress])
+                    )
                 }
         }.padding(.bottom, 15)
     }
@@ -337,7 +332,9 @@ private extension DiaryCellView {
     //MARK: - 캠핑장 이동
     var diaryCampingLink: some View {
         HStack {
-            WebImage(url: URL(string: campingSpotStore.campingSpotList.first?.firstImageUrl == "" ? campingSpotStore.noImageURL : campingSpotStore.campingSpotList.first?.firstImageUrl ?? ""))
+            WebImage(url: URL(string: campingSpotStore.campingSpotList.first?.firstImageUrl == "" 
+                              ? campingSpotStore.noImageURL
+                              : campingSpotStore.campingSpotList.first?.firstImageUrl ?? ""))
                 .resizable()
                 .frame(width: 60, height: 60)
                 .padding(.trailing, 5)
@@ -389,31 +386,17 @@ private extension DiaryCellView {
                 Image(systemName: diaryLikeStore.diaryLikeList.contains(wholeAuthStore.currentUser?.uid ?? "") ? "flame.fill" : "flame")
                     .foregroundColor(diaryLikeStore.diaryLikeList.contains(wholeAuthStore.currentUser?.uid ?? "") ? .red : .secondary)
             }
+            
             Text("\(diaryLikeStore.diaryLikeList.count)")
                 .font(.callout)
                 .foregroundColor(.secondary)
                 .padding(.leading, -2)
                 .frame(width: 20, alignment: .leading)
             
-            //댓글 버튼
-//            NavigationLink {
-//                DiaryDetailView(item: item)
-//                    .onTapGesture {
-//                        diaryStore.isCommentButtonClicked = true
-//                        print("---------------button: \(diaryStore.isCommentButtonClicked)")
-//                    }
-//            } label: {
-//                Image(systemName: "message")
-//                    .font(.callout)
-//                    .foregroundColor(.secondary)
-//
-//            }
-            //댓글버튼.
+            //댓글버튼
             NavigationLink(destination: DiaryDetailView(item: item), tag: 1, selection: $tag) {
                 EmptyView()
             }
-            
-            
             
             Button {
                 self.tag = 1
@@ -423,9 +406,7 @@ private extension DiaryCellView {
                     .font(.callout)
                     .foregroundColor(.secondary)
             }
-
-
-
+            
             Text("\(commentStore.commentList.count)")
                 .font(.callout)
                 .foregroundColor(.secondary)
