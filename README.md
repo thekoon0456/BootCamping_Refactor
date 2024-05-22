@@ -10,6 +10,11 @@
 - 다른 캠퍼들이 공유한 멋진 사진을 통해 인기 있는 캠핑장 정보도 알아보고, 나만의 캠핑 기록도 남길 수 있는 부트캠핑!
 <br>
 
+## 📱 스크린샷
+<div align="center">
+<img src="https://github.com/thekoon0456/thekoon0456/assets/106993057/4a14fb9a-85f8-491e-8746-517989acd86f" width="1000">
+</div>
+
 ## 🔗 Links
 ### [📱 AppStore](https://apps.apple.com/kr/app/부트캠핑/id1672213235)
 ### [💻 GitHub](https://github.com/thekoon0456/BootCamping_Refactor)
